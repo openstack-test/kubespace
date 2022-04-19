@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
 	"kubespace/server/global"
 	"kubespace/server/initialize"
 	"kubespace/server/service/system"
-	"go.uber.org/zap"
 )
 
 type server interface {
@@ -37,9 +37,10 @@ func RunWindowsServer() {
 
 	fmt.Printf(`
 	欢迎使用 Kubespace
-	当前版本:V1.0.0
-	默认自动化文档地址:http://127.0.0.1%s/swagger/index.html
-	默认前端文件运行地址:http://127.0.0.1:8080
+	当前版本: V1.0.0
+	默认swagger文档地址: http://127.0.0.1%s/swagger/index.html
+	默认前端运行地址: http://127.0.0.1:8080
+    默认后端运行地址: http://127.0.0.1:8888
 `, address)
 	global.GVA_LOG.Error(s.ListenAndServe().Error())
 }
