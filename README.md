@@ -11,9 +11,7 @@
 
 ## server后端代码调用路径
 ```bash
-###########
 initialize(router和gorm初始化) -> router(路由组) -> api/v1(api接口) -> service(功能实现代码) -> model(模型定义) -> source(api、casbin和menu定义)
-###########
 ```
 
 # 部署使用
