@@ -3,9 +3,9 @@ package system
 import (
 	"context"
 	adapter "github.com/casbin/gorm-adapter/v3"
-	"kubespace/server/service/system"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"kubespace/server/service/system"
 )
 
 const initOrderCasbin = initOrderApi + 1
@@ -153,6 +153,13 @@ func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error
 		{PType: "p", V0: "888", V1: "/authorityBtn/setAuthorityBtn", V2: "POST"},
 		{PType: "p", V0: "888", V1: "/authorityBtn/getAuthorityBtn", V2: "POST"},
 		{PType: "p", V0: "888", V1: "/authorityBtn/canRemoveAuthorityBtn", V2: "POST"},
+
+		{PType: "p", V0: "888", V1: "/k8s/cluster", V2: "POST"},
+		{PType: "p", V0: "888", V1: "/k8s/cluster/secret", V2: "GET"},
+		{PType: "p", V0: "888", V1: "/k8s/cluster/delete", V2: "POST"},
+		{PType: "p", V0: "888", V1: "/k8s/cluster", V2: "GET"},
+		{PType: "p", V0: "888", V1: "/k8s/cluster/detail", V2: "GET"},
+		{PType: "p", V0: "888", V1: "/k8s/events", V2: "GET"},
 
 		{PType: "p", V0: "8881", V1: "/base/login", V2: "POST"},
 		{PType: "p", V0: "8881", V1: "/user/admin_register", V2: "POST"},

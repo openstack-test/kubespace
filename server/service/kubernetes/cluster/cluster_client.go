@@ -1,4 +1,4 @@
-package init
+package cluster
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"kubespace/server/global"
-	"kubespace/server/service/kubernetes/cluster"
 	"strconv"
 )
 
@@ -42,12 +41,12 @@ func GetRestConf(k8sConf string) (restConf *rest.Config, err error) {
 	return restConf, nil
 }
 
-// ClusterID 公共方法, 获取指定k8s集群的KubeConfig
+// ClusterID方法, 获取指定k8s集群的KubeConfig
 func ClusterID(c *gin.Context) (*kubernetes.Clientset, error) {
 
 	clusterId := c.DefaultQuery("clusterId", "1")
 	clusterIdUint, err := strconv.ParseUint(clusterId, 10, 32)
-	k8sCluster, err := cluster.GetK8sCluster(uint(clusterIdUint))
+	k8sCluster, err := GetK8sCluster(uint(clusterIdUint))
 	if err != nil {
 		global.GVA_LOG.Error("获取集群失败", zap.Any("err", err))
 		return nil, err

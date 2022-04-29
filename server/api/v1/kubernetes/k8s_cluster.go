@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"kubespace/server/service/kubernetes/event"
-	"kubespace/server/service/kubernetes/parser"
 	"kubespace/server/controller"
 	"kubespace/server/global"
 	"kubespace/server/model/common/response"
 	"kubespace/server/model/kubernetes"
 	"kubespace/server/service/kubernetes/cluster"
-	"kubespace/server/service/kubernetes/init"
+	"kubespace/server/service/kubernetes/event"
+	"kubespace/server/service/kubernetes/parser"
 	"strconv"
 )
 
@@ -23,7 +22,7 @@ func (a *ClusterApi) CreateK8SCluster(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	client, err := init.GetK8sClient(K8sCluster.KubeConfig)
+	client, err := cluster.GetK8sClient(K8sCluster.KubeConfig)
 	if err != nil {
 		response.FailWithMessage("创建K8s集群错误", c)
 		return
@@ -104,7 +103,7 @@ func (a *ClusterApi) ClusterSecret(c *gin.Context) {
 }
 
 func (a *ClusterApi) GetK8SClusterDetail(c *gin.Context) {
-	client, err := init.ClusterID(c)
+	client, err := cluster.ClusterID(c)
 	if err != nil {
 		response.FailWithMessage("获取K8s集群详情失败", c)
 		return
@@ -115,7 +114,7 @@ func (a *ClusterApi) GetK8SClusterDetail(c *gin.Context) {
 
 func (a *ClusterApi) Events(c *gin.Context) {
 	namespace := parser.ParseNamespaceParameter(c)
-	client, err := init.ClusterID(c)
+	client, err := cluster.ClusterID(c)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return

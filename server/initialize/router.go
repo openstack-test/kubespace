@@ -18,6 +18,7 @@ func Routers() *gin.Engine {
 	Router := gin.Default()
 	systemRouter := router.RouterGroupApp.System
 	exampleRouter := router.RouterGroupApp.Example
+	kubernetesRouter := router.RouterGroupApp.Kubernetes
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -69,6 +70,8 @@ func Routers() *gin.Engine {
 		exampleRouter.InitExcelRouter(PrivateGroup)                 // 表格导入导出
 		exampleRouter.InitCustomerRouter(PrivateGroup)              // 客户路由
 		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
+
+		kubernetesRouter.InitClusterRouter(PrivateGroup)            // K8s集群路由
 
 	}
 

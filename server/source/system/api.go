@@ -2,10 +2,10 @@ package system
 
 import (
 	"context"
-	sysModel "kubespace/server/model/system"
-	"kubespace/server/service/system"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	sysModel "kubespace/server/model/system"
+	"kubespace/server/service/system"
 )
 
 type initApi struct{}
@@ -154,6 +154,13 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/setAuthorityBtn", Description: "设置按钮权限"},
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/getAuthorityBtn", Description: "获取已有按钮权限"},
 		{ApiGroup: "按钮权限", Method: "POST", Path: "/authorityBtn/canRemoveAuthorityBtn", Description: "删除按钮"},
+
+		{ApiGroup: "k8s", Method: "POST", Path: "/k8s/cluster", Description: "创建k8s集群"},
+		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/cluster/secret", Description: "获取k8s集群凭证"},
+		{ApiGroup: "k8s", Method: "POST", Path: "/k8s/cluster/delete", Description: "删除k8s集群"},
+		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/cluster", Description: "列出k8s集群"},
+		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/cluster/detail", Description: "获取k8s集群详情"},
+		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/events", Description: "获取k8s集群事件"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysApi{}.TableName()+"表数据初始化失败!")
