@@ -160,7 +160,7 @@ func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 		{ApiGroup: "k8s", Method: "POST", Path: "/k8s/cluster/delete", Description: "删除k8s集群"},
 		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/cluster", Description: "列出k8s集群"},
 		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/cluster/detail", Description: "获取k8s集群详情"},
-		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/events", Description: "获取k8s集群事件"},
+		{ApiGroup: "k8s", Method: "GET", Path: "/k8s/events", Description: "获取k8s事件"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysApi{}.TableName()+"表数据初始化失败!")
