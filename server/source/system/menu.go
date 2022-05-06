@@ -2,10 +2,10 @@ package system
 
 import (
 	"context"
-	. "kubespace/server/model/system"
-	"kubespace/server/service/system"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	. "kubespace/server/model/system"
+	"kubespace/server/service/system"
 )
 
 const initOrderMenu = initOrderAuthority + 1
@@ -73,11 +73,13 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 0, Hidden: true, ParentId: "3", Path: "dictionaryDetail/:id", Name: "dictionaryDetail", Component: "view/superAdmin/dictionary/sysDictionaryDetail.vue", Sort: 1, Meta: Meta{Title: "字典详情", Icon: "order"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "3", Path: "operation", Name: "operation", Component: "view/superAdmin/operation/sysOperationRecord.vue", Sort: 6, Meta: Meta{Title: "操作历史", Icon: "pie-chart"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "9", Path: "simpleUploader", Name: "simpleUploader", Component: "view/example/simpleUploader/simpleUploader", Sort: 6, Meta: Meta{Title: "断点续传（插件版）", Icon: "upload"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "https://www.gin-vue-admin.com", Name: "https://www.gin-vue-admin.com", Component: "/", Sort: 0, Meta: Meta{Title: "官方网站", Icon: "home-filled"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "state", Name: "state", Component: "view/system/state.vue", Sort: 6, Meta: Meta{Title: "服务器状态", Icon: "cloudy"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "14", Path: "autoCodeAdmin", Name: "autoCodeAdmin", Component: "view/systemTools/autoCodeAdmin/index.vue", Sort: 1, Meta: Meta{Title: "自动化代码管理", Icon: "magic-stick"}},
 		{MenuLevel: 0, Hidden: true, ParentId: "14", Path: "autoCodeEdit/:id", Name: "autoCodeEdit", Component: "view/systemTools/autoCode/index.vue", Sort: 0, Meta: Meta{Title: "自动化代码（复用）", Icon: "magic-stick"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "14", Path: "autoPkg", Name: "autoPkg", Component: "view/systemTools/autoPkg/autoPkg.vue", Sort: 0, Meta: Meta{Title: "自动化package", Icon: "folder"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "kubernetes", Name: "kubernetes", Component: "view/kubernetes/index.vue", Sort: 2, Meta: Meta{Title: "Kubernetes管理", Icon: "cloudy"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "26", Path: "k8sCluster", Name: "k8sCluster", Component: "view/kubernetes/cluster/K8SClusterManage.vue", Sort: 1, Meta: Meta{Title: "集群管理", Icon: "menu"}},
+
 	}
 	if err = db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, SysBaseMenu{}.TableName()+"表数据初始化失败!")

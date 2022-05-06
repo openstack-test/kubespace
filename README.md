@@ -1,25 +1,34 @@
 # 项目介绍
-本项目基于[Gin-Vue-Admin](https://kubespace) 开源项目开发 (main 42b4d21)，在此基础上开发实现一个DevOps自动化运维管理平台。
+本项目基于[Gin-Vue-Admin](https://github.com/flipped-aurora/gin-vue-admin) 开源项目开发 (main 42b4d21)，在此基础上开发实现一个DevOps自动化运维管理平台。
 
 ## 分支说明
 * develop： 是开发分支，有最新提交代码
 * master：  是稳定分支，代码从develop合过来
 
 ## 技术栈
-- 前端框架：[Element-ui](https://github.com/ElemeFE/element)  [Vue](https://cn.vuejs.org/)
-- 后台框架：[Gin](https://github.com/gin-gonic/gin)
+- 前端框架：[Element-ui](https://github.com/ElemeFE/element) + [Vue3](https://cn.vuejs.org/) + Vite
+- 后台框架：[Gin](https://github.com/gin-gonic/gin) + [Golang](https://go.dev/doc/)
+
+## server后端调用路径
+```bash
+initialize(router和gorm初始化) -> router(路由组) -> api/v1(api接口) -> service(功能实现代码) -> model(模型定义) -> source/system(api、casbin和menu定义)
+```
 
 # 部署使用
 - node版本 > v8.6.0
 - golang版本 >= v1.14
 - IDE推荐：Goland
 
+## 部署MySQL
+- 部署MySQL 5.7 版本
+
 ## 启动Server端
 ```bash
 # 克隆项目
 git clone git@github.com:openstack-test/kubespace.git
 
-# 使用 goland等编辑工具，进入server目录安装go依赖包
+# 使用 goland等编辑工具，进入server后端目录安装go依赖包
+cd server
 go generate
 
 # 启动服务
@@ -43,7 +52,7 @@ npm run build
 ```
 
 ## 登录
-登录页面点击初始化数据库后，登录即可。
+在登录页面点击初始化数据库后，登录即可。
 
 ## Swagger自动化API文档
 
