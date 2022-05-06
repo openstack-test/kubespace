@@ -15,9 +15,8 @@ initialize(router和gorm初始化) -> router(路由组) -> api/v1(api接口) -> 
 ```
 
 # 部署使用
-- node版本 > v8.6.0
-- golang版本 >= v1.14
-- IDE推荐：Goland
+- node版本 >= v12.22.7
+- golang版本 >= v1.16
 
 ## 部署MySQL
 - 部署MySQL 5.7 版本
@@ -58,7 +57,7 @@ npm run build
 
 ### 安装 swagger
 ````
-go get -u github.com/swaggo/swag/cmd/swag
+go get -u github.com/swaggo/swag/cmd/swag@v1.7.4
 ````
 
 ### 生成API文档
