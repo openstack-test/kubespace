@@ -1,6 +1,6 @@
 import service from '@/utils/request'
 
-export const k8sCluster = (data) => {
+export const createK8sCluster = (data) => {
      return service({
          url: "/k8s/cluster",
          method: 'post',
@@ -9,7 +9,7 @@ export const k8sCluster = (data) => {
  }
 
 
- export const fetchK8SCluster = (data) => {
+ export const getK8sClusterList = (data) => {
      return service({
          url: "/k8s/cluster",
          method: 'get',
@@ -18,10 +18,34 @@ export const k8sCluster = (data) => {
  }
 
 
- export const getK8SClusterDetail = (data) => {
+ export const findK8sCluster = (data) => {
      return service({
          url: "/k8s/cluster/detail",
          method: 'get',
          data
      })
  }
+
+ export const deleteK8sCluster = (data) => {
+    return service({
+        url: "/k8s/cluster/detail",
+        method: 'get',
+        data
+    })
+}
+
+export const deleteK8sClusterByIds = (data) => {
+    return service({
+        url: "/k8s/cluster/detail",
+        method: 'get',
+        data
+    })
+}
+
+export const updateK8sCluster = (data) => {
+    return service({
+        url: "/k8s/cluster/detail",
+        method: 'get',
+        data
+    })
+}

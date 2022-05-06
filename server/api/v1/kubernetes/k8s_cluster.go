@@ -44,7 +44,7 @@ func (a *ClusterApi) CreateK8SCluster(c *gin.Context) {
 		response.FailWithMessage("创建K8s集群错误", c)
 		return
 	} else {
-		response.OkWithMessage("创建集群成功", c)
+		response.OkWithMessage("创建K8s集群成功", c)
 		return
 	}
 }
