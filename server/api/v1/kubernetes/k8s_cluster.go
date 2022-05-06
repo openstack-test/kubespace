@@ -16,6 +16,15 @@ import (
 
 type ClusterApi struct {}
 
+// CreateK8sCluster 创建k8s集群
+// @Tags K8sCluster
+// @Summary 创建k8s集群
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body kubernetes.K8SCluster true "创建k8s集群"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /k8s/cluster [post]
 func (a *ClusterApi) CreateK8SCluster(c *gin.Context) {
 	var K8sCluster kubernetes.K8SCluster
 	err := controller.CheckParams(c, &K8sCluster)
@@ -49,6 +58,15 @@ func (a *ClusterApi) CreateK8SCluster(c *gin.Context) {
 	}
 }
 
+// CreateK8sCluster 获取k8s集群
+// @Tags K8sCluster
+// @Summary 获取k8s集群
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query kubernetes.K8SCluster true "获取k8s集群"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /k8s/cluster [get]
 func (a *ClusterApi) ListK8SCluster(c *gin.Context) {
 	query := kubernetes.PaginationQ{}
 	if c.ShouldBindQuery(&query) != nil {
@@ -71,6 +89,15 @@ func (a *ClusterApi) ListK8SCluster(c *gin.Context) {
 	}
 }
 
+// CreateK8sCluster 删除k8s集群
+// @Tags K8sCluster
+// @Summary 删除k8s集群
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query kubernetes.K8SCluster true "删除k8s集群"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /k8s/cluster/delete [post]
 func (a *ClusterApi) DelK8SCluster(c *gin.Context) {
 	var id kubernetes.ClusterIds
 	err := controller.CheckParams(c, &id)
@@ -88,6 +115,15 @@ func (a *ClusterApi) DelK8SCluster(c *gin.Context) {
 	return
 }
 
+// CreateK8sCluster 获取k8s集群凭证
+// @Tags K8sCluster
+// @Summary 获取k8s集群凭证
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query kubernetes.K8SCluster true "获取k8s集群凭证"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /k8s/cluster/secret [get]
 func (a *ClusterApi) ClusterSecret(c *gin.Context) {
 	clusterId := c.DefaultQuery("clusterId", "1")
 	clusterIdUint, err := strconv.ParseUint(clusterId, 10, 32)
@@ -102,6 +138,15 @@ func (a *ClusterApi) ClusterSecret(c *gin.Context) {
 	return
 }
 
+// CreateK8sCluster 获取k8s集群详情
+// @Tags K8sCluster
+// @Summary 获取k8s集群详情
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query kubernetes.K8SCluster true "获取k8s集群详情"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /k8s/cluster/detail [get]
 func (a *ClusterApi) GetK8SClusterDetail(c *gin.Context) {
 	client, err := cluster.ClusterID(c)
 	if err != nil {
@@ -112,6 +157,15 @@ func (a *ClusterApi) GetK8SClusterDetail(c *gin.Context) {
 	response.OkWithData(data, c)
 }
 
+// CreateK8sCluster 获取k8s事件
+// @Tags K8sCluster
+// @Summary 获取k8s事件
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data query kubernetes.K8SCluster true "获取k8s事件"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"获取成功"}"
+// @Router /k8s/events [get]
 func (a *ClusterApi) Events(c *gin.Context) {
 	namespace := parser.ParseNamespaceParameter(c)
 	client, err := cluster.ClusterID(c)
