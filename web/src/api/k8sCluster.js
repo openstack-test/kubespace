@@ -1,6 +1,6 @@
 import service from '@/utils/request'
 
-export const createK8sCluster = (data) => {
+export const k8sCluster = (data) => {
      return service({
          url: "/k8s/cluster",
          method: 'post',
@@ -9,7 +9,7 @@ export const createK8sCluster = (data) => {
  }
 
 
- export const getK8sClusterList = (data) => {
+ export const fetchK8SCluster = (data) => {
      return service({
          url: "/k8s/cluster",
          method: 'get',
@@ -18,15 +18,23 @@ export const createK8sCluster = (data) => {
  }
 
 
- export const findK8sCluster = (data) => {
+ export const clusterSecret = (data) => {
      return service({
-         url: "/k8s/cluster/detail",
+         url: "/k8s/cluster/secret",
          method: 'get',
          data
      })
  }
 
- export const deleteK8sCluster = (data) => {
+ export const delK8SCluster = (data) => {
+    return service({
+        url: "/k8s/cluster/delete",
+        method: 'post',
+        data
+    })
+}
+
+export const getK8SClusterDetail = (data) => {
     return service({
         url: "/k8s/cluster/detail",
         method: 'get',
@@ -34,17 +42,9 @@ export const createK8sCluster = (data) => {
     })
 }
 
-export const deleteK8sClusterByIds = (data) => {
+export const getEvents = (data) => {
     return service({
-        url: "/k8s/cluster/detail",
-        method: 'get',
-        data
-    })
-}
-
-export const updateK8sCluster = (data) => {
-    return service({
-        url: "/k8s/cluster/detail",
+        url: "/k8s/events",
         method: 'get',
         data
     })

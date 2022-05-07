@@ -1,292 +1,339 @@
 <template>
   <div>
-    <div class="gva-search-box">
-      <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
-        <el-form-item>
-          <el-button size="small" type="primary" icon="search" @click="onSubmit">查询</el-button>
-          <el-button size="small" icon="refresh" @click="onReset">重置</el-button>
-        </el-form-item>
-      </el-form>
+
+    <div style="margin-bottom: 16px">
+      <a-space>
+        <a-button type="primary" @click="addK8SCluster">注册集群</a-button>
+        <a-button type="primary" danger :disabled="state.selectedRows.length<=0" @click="removeCluster()">批量删除</a-button>
+      </a-space>
     </div>
-    <div class="gva-table-box">
-        <div class="gva-btn-list">
-            <el-button size="small" type="primary" icon="plus" @click="openDialog">新增</el-button>
-            <el-popover v-model:visible="deleteVisible" placement="top" width="160">
-            <p>确定要删除吗？</p>
-            <div style="text-align: right; margin-top: 8px;">
-                <el-button size="small" type="text" @click="deleteVisible = false">取消</el-button>
-                <el-button size="small" type="primary" @click="onDelete">确定</el-button>
-            </div>
-            <template #reference>
-                <el-button icon="delete" size="small" style="margin-left: 10px;" :disabled="!multipleSelection.length" @click="deleteVisible = true">删除</el-button>
-            </template>
-            </el-popover>
-        </div>
-        <el-table
-        ref="multipleTable"
-        style="width: 100%"
-        tooltip-effect="dark"
-        :data="tableData"
-        row-key="ID"
-        @selection-change="handleSelectionChange"
-        >
-        <el-table-column type="selection" width="55" />
-        <el-table-column align="left" label="日期" width="180">
-            <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
-        </el-table-column>
-        <el-table-column align="left" label="集群名称" prop="clusterName" width="120" />
-        <el-table-column align="left" label="集群凭证" prop="kubeConfig" width="120" />
-        <el-table-column align="left" label="集群版本" prop="clusterVersion" width="120" />
-        <el-table-column align="left" label="节点数" prop="nodeNumber" width="120" />
-        <el-table-column align="left" label="按钮组">
-            <template #default="scope">
-            <el-button type="text" icon="edit" size="small" class="table-button" @click="updateK8sClusterFunc(scope.row)">变更</el-button>
-            <el-button type="text" icon="delete" size="small" @click="deleteRow(scope.row)">删除</el-button>
-            </template>
-        </el-table-column>
-        </el-table>
-        <div class="gva-pagination">
-            <el-pagination
-            layout="total, sizes, prev, pager, next, jumper"
-            :current-page="page"
-            :page-size="pageSize"
-            :page-sizes="[10, 30, 50, 100]"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-            />
-        </div>
-    </div>
-    <el-dialog v-model="dialogFormVisible" :before-close="closeDialog" title="弹窗操作">
-      <el-form :model="formData" label-position="right" label-width="80px">
-        <el-form-item label="集群名称:">
-          <el-input v-model="formData.clusterName" clearable placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="集群凭证:">
-          <el-input v-model="formData.kubeConfig" clearable placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="集群版本:">
-          <el-input v-model="formData.clusterVersion" clearable placeholder="请输入" />
-        </el-form-item>
-        <el-form-item label="节点数:">
-          <el-input v-model.number="formData.nodeNumber" clearable placeholder="请输入" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button size="small" @click="closeDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="enterDialog">确 定</el-button>
-        </div>
+
+    <a-table
+        :row-selection="rowSelection"
+        :columns="columns"
+        :data-source="state.data"
+        :pagination="false"
+        rowKey="id"
+        :locale="{emptyText: '暂无数据'}"
+    >
+
+      <template #ClusterVersion="{ text }">
+        <span>
+          <IconFont type="luban-icon-logo"/> &nbsp;{{ text }}
+        </span>
       </template>
-    </el-dialog>
+
+      <template #nodeNumber="{ text }">
+        <span>
+          <a-tag color="cyan">{{ text }}</a-tag>
+        </span>
+      </template>
+
+      <template #kubeConfig="{ text, id }">
+        <a-tooltip placement="topLeft" title="查看凭证">
+          <a @click="ViewClusterConfig(id, text.id)"><IconFont type="pigs-icon-pingzheng"/></a>
+        </a-tooltip>
+      </template>
+
+      <template #action="{text, id }">
+        <span>
+          <a @click="clusterDetail(id, text.id)">查看</a>
+        </span>
+      </template>
+
+    </a-table>
+    <a-modal v-model:visible="state.ClusterConfigVisible" title="查看集群凭证" :footer="null" :keyboard="false" :maskClosable="false">
+
+      <a-textarea v-model:value="state.ClusterConfig" placeholder="请粘贴KubeConfig内容" style="width: 100%; height: 600px"/>
+    </a-modal>
+
+
+    <a-modal v-model:visible="createK8SClusterVisible" title="添加新集群" @ok="onSubmit" @cancel="resetForm" cancelText="取消"
+             okText="确定" :keyboard="false" :maskClosable="false">
+      <a-form
+          ref="formRef"
+          :model="formState"
+          :rules="rules"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+      >
+        <a-form-item ref="k8sClusterName" label="集群名称" name="k8sClusterName">
+          <a-input v-model:value="formState.k8sClusterName" placeholder="请输入集群名称"/>
+        </a-form-item>
+
+<!--        <a-form-item label="集群版本" name="k8sClusterVersion">-->
+<!--          <a-select v-model:value="formState.k8sClusterVersion" placeholder="请选择集群版本">-->
+<!--            <a-select-option value="shanghai">Zone one</a-select-option>-->
+<!--            <a-select-option value="beijing">Zone two</a-select-option>-->
+<!--          </a-select>-->
+<!--        </a-form-item>-->
+
+        <a-form-item label="集群凭证" name="k8sClusterConfig">
+          <a-textarea v-model:value="formState.k8sClusterConfig" placeholder="请粘贴KubeConfig内容"
+                      style="width: 100%; height: 300px"/>
+        </a-form-item>
+
+      </a-form>
+    </a-modal>
+
+    <div class="float-right" style="padding: 10px 0;">
+
+      <a-pagination size="md" :show-total="total => `共 ${state.total} 条数据`" :v-model="state.total"
+                    :page-size-options="state.pageSizeOptions"
+                    :total="state.total"
+                    show-size-changer
+                    :pageSize="state.pageSize"
+                    show-less-items align="right"
+                    @showSizeChange="onShowSizeChange"
+                    @change="onChange"
+      >
+        <template #buildOptionText="props">
+          <span v-if="props.value !== '50'">{{ props.value }}条/页</span>
+          <span v-if="props.value === '50'">全部</span>
+        </template>
+      </a-pagination>
+    </div>
+
+
   </div>
 </template>
 
 <script>
-export default {
-  name: 'K8sCluster'
-}
-</script>
+import {defineComponent, inject, onMounted, reactive, ref} from 'vue';
+import {fetchK8SCluster, k8sCluster, delK8SCluster, clusterSecret} from '@/api/k8sCluster'
+import {createFromIconfontCN} from "@ant-design/icons-vue";
+import router from "@/router";
 
-<script setup>
-import {
-  createK8sCluster,
-  deleteK8sCluster,
-  deleteK8sClusterByIds,
-  updateK8sCluster,
-  findK8sCluster,
-  getK8sClusterList
-} from '@/api/k8sCluster'
-
-// 全量引入格式化工具 请按需保留
-import { getDictFunc, formatDate, formatBoolean, filterDict } from '@/utils/format'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref } from 'vue'
-
-// 自动化生成的字典（可能为空）以及字段
-const formData = ref({
-        clusterName: '',
-        kubeConfig: '',
-        clusterVersion: '',
-        nodeNumber: 0,
-        })
-
-// =========== 表格控制部分 ===========
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
-const tableData = ref([])
-const searchInfo = ref({})
-
-// 重置
-const onReset = () => {
-  searchInfo.value = {}
-}
-
-// 搜索
-const onSubmit = () => {
-  page.value = 1
-  pageSize.value = 10
-  getTableData()
-}
-
-// 分页
-const handleSizeChange = (val) => {
-  pageSize.value = val
-  getTableData()
-}
-
-// 修改页面容量
-const handleCurrentChange = (val) => {
-  page.value = val
-  getTableData()
-}
-
-// 查询
-const getTableData = async() => {
-  const table = await getK8sClusterList({ page: page.value, pageSize: pageSize.value, ...searchInfo.value })
-  if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+const columns = [
+  {
+    title: '集群名称',
+    dataIndex: 'clusterName',
+    slots: {customRender: 'cluster'},
+  },
+  {
+    title: '集群版本',
+    dataIndex: 'clusterVersion',
+    slots: {customRender: 'ClusterVersion'}
+  },
+  {
+    title: '节点数量',
+    dataIndex: 'nodeNumber',
+    slots: {customRender: 'nodeNumber'}
+  },
+  {
+    title: '集群凭证',
+    // dataIndex: 'kubeConfig',
+    slots: {customRender: 'kubeConfig'},
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'CreatedAt',
+  },
+  {
+    title: '操作',
+    // dataIndex: 'action',
+    slots: {customRender: 'action'},
   }
-}
+];
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2828790_vphs1aik0kn.js',
+});
+export default defineComponent({
+  name: "Manage",
+  setup() {
+    let selectedRowKeys;
+    const state = reactive({
+      selectedRows: [],
+      selectedRowKeys,
+      loading: false,
+      data: [],
+      pageSize: 10,
+      current: null,
+      total: 0,
+      pageSizeOptions: ['10', '20', '30', '40'],
+      ClusterConfigVisible: false,
+      ClusterConfig: undefined,
+    });
 
-getTableData()
+    const createK8SClusterVisible = ref(false);
 
-// ============== 表格控制部分结束 ===============
-
-// 获取需要的字典 可能为空 按需保留
-const setOptions = async () =>{
-}
-
-// 获取需要的字典 可能为空 按需保留
-setOptions()
-
-
-// 多选数据
-const multipleSelection = ref([])
-// 多选
-const handleSelectionChange = (val) => {
-    multipleSelection.value = val
-}
-
-// 删除行
-const deleteRow = (row) => {
-    ElMessageBox.confirm('确定要删除吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-    }).then(() => {
-            deleteK8sClusterFunc(row)
-        })
+    let addK8SCluster = () => {
+      createK8SClusterVisible.value = true;
     }
 
+    const formRef = ref();
+    const formState = reactive({
+      k8sClusterName: undefined,
+      k8sClusterVersion: "",
+      k8sClusterConfig: undefined,
+    });
+    const rules = {
+      k8sClusterName: [
+        {
+          required: true,
+          message: '请输入集群名称',
+          trigger: 'blur',
+        },
+        {
+          min: 3,
+          max: 25,
+          message: '集群名称长度应为3~25',
+          trigger: 'blur',
+        },
+      ],
+      // k8sClusterVersion: [
+      //   {
+      //     required: true,
+      //     message: '请选择集群版本',
+      //     trigger: 'change',
+      //   },
+      // ],
+      k8sClusterConfig: [
+        {
+          required: true,
+          message: '请粘贴KubeConfig内容',
+          trigger: 'blur',
+        },
+      ],
+    };
 
-// 批量删除控制标记
-const deleteVisible = ref(false)
-
-// 多选删除
-const onDelete = async() => {
-      const ids = []
-      if (multipleSelection.value.length === 0) {
-        ElMessage({
-          type: 'warning',
-          message: '请选择要删除的数据'
-        })
-        return
-      }
-      multipleSelection.value &&
-        multipleSelection.value.map(item => {
-          ids.push(item.ID)
-        })
-      const res = await deleteK8sClusterByIds({ ids })
-      if (res.code === 0) {
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        })
-        if (tableData.value.length === ids.length && page.value > 1) {
-          page.value--
-        }
-        deleteVisible.value = false
-        getTableData()
-      }
-    }
-
-// 行为控制标记（弹窗内部需要增还是改）
-const type = ref('')
-
-// 更新行
-const updateK8sClusterFunc = async(row) => {
-    const res = await findK8sCluster({ ID: row.ID })
-    type.value = 'update'
-    if (res.code === 0) {
-        formData.value = res.data.rek8sCluster
-        dialogFormVisible.value = true
-    }
-}
-
-
-// 删除行
-const deleteK8sClusterFunc = async (row) => {
-    const res = await deleteK8sCluster({ ID: row.ID })
-    if (res.code === 0) {
-        ElMessage({
-                type: 'success',
-                message: '删除成功'
+    const onSubmit = () => {
+      formRef.value
+          .validate()
+          .then(() => {
+            k8sCluster({
+              "clusterName": formState.k8sClusterName,
+              "kubeConfig": formState.k8sClusterConfig,
+              "clusterVersion": formState.k8sClusterVersion
+            }).then(res => {
+              if (res.errCode === 0) {
+                message.success(res.msg)
+                createK8SClusterVisible.value = false;
+                resetForm()
+                getK8SCluster()
+              } else {
+                message.error(res.errMsg)
+              }
             })
-            if (tableData.value.length === 1 && page.value > 1) {
-            page.value--
-        }
-        getTableData()
+          })
+          .catch(error => {
+            return error
+          });
+    };
+
+    const resetForm = () => {
+      formRef.value.resetFields();
+    };
+    const message = inject('$message');
+    // 获取集群信息
+    const getK8SCluster = async (pageSize) => {
+      const {data} = await fetchK8SCluster({size: pageSize})
+      state.data = data.data
+      state.total = data.total
+      state.pageSize = data.pageSize
     }
-}
-
-// 弹窗控制标记
-const dialogFormVisible = ref(false)
-
-// 打开弹窗
-const openDialog = () => {
-    type.value = 'create'
-    dialogFormVisible.value = true
-}
-
-// 关闭弹窗
-const closeDialog = () => {
-    dialogFormVisible.value = false
-    formData.value = {
-        clusterName: '',
-        kubeConfig: '',
-        clusterVersion: '',
-        nodeNumber: 0,
+    // 翻页
+    const onChange = async (pageNumber) => {
+      fetchK8SCluster({
+        page: pageNumber,
+        size: state.pageSize
+      }).then(res => {
+        if (res.errCode === 0) {
+          state.data = res.data.data
+          state.total = res.data.total
+          state.pageSize = res.data.pageSize
         }
-}
-// 弹窗确定
-const enterDialog = async () => {
-      let res
-      switch (type.value) {
-        case 'create':
-          res = await createK8sCluster(formData.value)
-          break
-        case 'update':
-          res = await updateK8sCluster(formData.value)
-          break
-        default:
-          res = await createK8sCluster(formData.value)
-          break
+      });
+
+    };
+    // 显示条数
+    const onShowSizeChange = async (current, pageSize) => {
+      const {data} = await fetchK8SCluster({
+        size: pageSize,
+      })
+      state.data = data.data
+      state.total = data.total
+      state.pageSize = data.pageSize
+      state.current = 1
+    };
+
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        state.selectedRows = selectedRows
+        state.selectedRowKeys = selectedRowKeys
+      },
+    };
+    // 批量删除集群
+    const removeCluster = async () => {
+      let clusterIds = [];
+      for (let i=0; i < state.selectedRowKeys.length; i++){
+        clusterIds.push(state.selectedRowKeys[i])
       }
-      if (res.code === 0) {
-        ElMessage({
-          type: 'success',
-          message: '创建/更改成功'
-        })
-        closeDialog()
-        getTableData()
-      }
-}
+      await delK8SCluster({"clusterIds": clusterIds}).then(res => {
+        if (res.errCode === 0){
+          message.success(res.msg)
+          getK8SCluster()
+        }else {
+          message.error(res.errMsg)
+        }
+      });
+
+    };
+    // 查看集群凭证
+    const ViewClusterConfig = (text, id) => {
+      clusterSecret({'clusterId': id}).then(res => {
+        if (res.errCode === 0){
+          state.ClusterConfig = res.data.secret
+          state.ClusterConfigVisible = true
+        }else {
+          message.error("获取集群凭证失败")
+
+        }
+      })
+
+      // state.ClusterConfig = text
+
+    }
+    // 查看集群详情
+    const clusterDetail = (text, id) => {
+      router.push({path: `/k8s/cluster/detail/${id}`})
+    }
+    onMounted(getK8SCluster)
+
+
+    return {
+      columns,
+      state,
+
+      createK8SClusterVisible,
+      addK8SCluster,
+      formRef,
+      formState,
+      rules,
+      onSubmit,
+      resetForm,
+
+      labelCol: {
+        span: 4,
+      },
+      wrapperCol: {
+        span: 19,
+      },
+
+      onShowSizeChange,
+      onChange,
+      rowSelection,
+      removeCluster,
+      ViewClusterConfig,
+      clusterDetail,
+    };
+  },
+  components: {
+    IconFont,
+  }
+});
 </script>
 
 <style>
+
 </style>
