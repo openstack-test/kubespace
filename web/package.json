@@ -13,7 +13,7 @@
         "@antv/g2": "^4.2.0",
         "@antv/g2plot": "^2.4.16",
         "@element-plus/icons-vue": "^0.2.7",
-        "ant-design-vue": "^3.2.2",
+        "ant-design-vue": "^2.2.8",
         "axios": "^0.19.2",
         "core-js": "^3.6.5",
         "echarts": "4.9.0",

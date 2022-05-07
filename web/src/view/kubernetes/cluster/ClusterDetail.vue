@@ -1,48 +1,48 @@
 <template>
   <div>
-    <a-tabs v-model:activeKey="state.activeKey" style="background-color: #fff;height: 100%; ">
-      <a-tab-pane key="1" tab="集群概览">
-        <a-row>
-          <a-col :span="8" style="text-align: center">
-            <a-card size="small" title="CPU信息" style="left: 5px;width: 96%" >
-              <a-space>
-                <a-spin :spinning="state.loading"/>
+    <el-tabs v-model:activeKey="state.activeKey" style="background-color: #fff;height: 100%; ">
+      <el-tab-pane key="1" tab="集群概览">
+        <el-row>
+          <el-col :span="8" style="text-align: center">
+            <el-card size="small" title="CPU信息" style="left: 5px;width: 96%" >
+              <el-space>
+                <el-spin :spinning="state.loading"/>
                 <div id="cpuContainer"></div>
-              </a-space>
-            </a-card>
+              </el-space>
+            </el-card>
 
-            <a-space>
-              <a-card size="small" title="Used" style="width: 261px; height: 80px;margin-left: -11px">
+            <el-space>
+              <el-card size="small" title="Used" style="width: 261px; height: 80px;margin-left: -11px">
                 <p>
                   <span style="color: green">{{ state.data.cpu_core }}</span>
                   <span> Core</span>
                 </p>
-              </a-card>
+              </el-card>
               <br>
-              <a-card size="small" title="Total" style="width: 261px; height: 80px">
+              <el-card size="small" title="Total" style="width: 261px; height: 80px">
                 <p>
                   <span style="color: green">{{ state.data.cpu_capacity_core }}</span>
                   <span> Core</span>
                 </p>
-              </a-card>
-            </a-space>
+              </el-card>
+            </el-space>
 
-          </a-col>
+          </el-col>
 
 
-          <a-col :span="8" style="text-align: center">
-            <a-card size="small" title="节点状态" style="height: 360px;width: 96%">
-              <a-space style="">
+          <el-col :span="8" style="text-align: center">
+            <el-card size="small" title="节点状态" style="height: 360px;width: 96%">
+              <el-space style="">
                 <span v-if="state.data.ready>0">正常：{{ state.data.ready }}</span>
                 <span v-if="state.data.unready>0" style="color: red">异常：{{ state.data.unready }}</span>
-              </a-space>
-              <a-spin :spinning="state.loading"/>
+              </el-space>
+              <el-spin :spinning="state.loading"/>
               <div id="container"></div>
-            </a-card>
-          </a-col>
+            </el-card>
+          </el-col>
 
-<!--          <a-col :span="6">-->
-<!--            <a-card size="small" title="统计信息" style="height: 360px">-->
+<!--          <el-col :span="6">-->
+<!--            <el-card size="small" title="统计信息" style="height: 360px">-->
 <!--&lt;!&ndash;              <template #extra></template>&ndash;&gt;-->
 <!--              <p>Nodes：{{ state.data.node_count }}</p>-->
 <!--              <p>Namespaces：{{ state.data.namespace }}</p>-->
@@ -50,41 +50,41 @@
 <!--              <p>Pods：{{ state.data.pod }}</p>-->
 
 <!--              <br>-->
-<!--            </a-card>-->
-<!--          </a-col>-->
+<!--            </el-card>-->
+<!--          </el-col>-->
 
-          <a-col :span="8" style="text-align: center">
-            <a-card size="small" title="内存信息" style="left: 12px; width: 96%">
-              <a-space>
-                <a-spin :spinning="state.loading"/>
+          <el-col :span="8" style="text-align: center">
+            <el-card size="small" title="内存信息" style="left: 12px; width: 96%">
+              <el-space>
+                <el-spin :spinning="state.loading"/>
                 <div id="memContainer"></div>
-              </a-space>
-            </a-card>
+              </el-space>
+            </el-card>
 
-            <a-space>
-              <a-card size="small" title="Used" style="width: 265px; height: 80px; left: 5px">
+            <el-space>
+              <el-card size="small" title="Used" style="width: 265px; height: 80px; left: 5px">
                 <p>
                   <span style="color: green">{{ state.data.memory_used }}</span>
                   <span> G</span>
                 </p>
-              </a-card>
-              <a-card size="small" title="Total" style="width: 265px; height: 80px">
+              </el-card>
+              <el-card size="small" title="Total" style="width: 265px; height: 80px">
                 <p>
                   <span style="color: green">{{ state.data.memory_total }}</span>
                   <span> G</span>
                 </p>
-              </a-card>
-            </a-space>
+              </el-card>
+            </el-space>
 
-          </a-col>
+          </el-col>
 
-        </a-row>
+        </el-row>
 
         <br/>
         <div style="margin-left: 15px; margin-right: 15px">
           <h4 style="font-weight: bold;margin-left: 20px">事件</h4>
-          <a-spin :spinning="state.eventLoading">
-            <a-table :columns="columns" :data-source="state.eventsData" size="middle">
+          <el-spin :spinning="state.eventLoading">
+            <el-table :columns="columns" :datel-source="state.eventsData" size="middle">
               <template #type="text">
                 <span v-if="text.text=='Warning'" style="color: orange">
                   {{ text.text }}
@@ -100,15 +100,15 @@
                 </span>
               </template>
 
-            </a-table>
-          </a-spin>
+            </el-table>
+          </el-spin>
         </div>
 
         <br/>
-      </a-tab-pane>
-<!--      <a-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 2</a-tab-pane>-->
-<!--      <a-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</a-tab-pane>-->
-    </a-tabs>
+      </el-tab-pane>
+<!--      <el-tab-pane key="2" tab="Tab 2" force-render>Content of Tab Pane 2</el-tab-pane>-->
+<!--      <el-tab-pane key="3" tab="Tab 3">Content of Tab Pane 3</el-tab-pane>-->
+    </el-tabs>
 
   </div>
 </template>

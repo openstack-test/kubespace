@@ -2,16 +2,16 @@
   <div>
 
     <div style="margin-bottom: 16px">
-      <a-space>
-        <a-button type="primary" @click="addK8SCluster">注册集群</a-button>
-        <a-button type="primary" danger :disabled="state.selectedRows.length<=0" @click="removeCluster()">批量删除</a-button>
-      </a-space>
+      <el-space>
+        <el-button type="primary" @click="addK8SCluster">注册集群</el-button>
+        <el-button type="primary" danger :disabled="state.selectedRows.length<=0" @click="removeCluster()">批量删除</el-button>
+      </el-space>
     </div>
 
-    <a-table
+    <el-table
         :row-selection="rowSelection"
         :columns="columns"
-        :data-source="state.data"
+        :datel-source="state.data"
         :pagination="false"
         rowKey="id"
         :locale="{emptyText: '暂无数据'}"
@@ -25,14 +25,14 @@
 
       <template #nodeNumber="{ text }">
         <span>
-          <a-tag color="cyan">{{ text }}</a-tag>
+          <el-tag color="cyan">{{ text }}</el-tag>
         </span>
       </template>
 
       <template #kubeConfig="{ text, id }">
-        <a-tooltip placement="topLeft" title="查看凭证">
+        <el-tooltip placement="topLeft" title="查看凭证">
           <a @click="ViewClusterConfig(id, text.id)"><IconFont type="pigs-icon-pingzheng"/></a>
-        </a-tooltip>
+        </el-tooltip>
       </template>
 
       <template #action="{text, id }">
@@ -41,44 +41,44 @@
         </span>
       </template>
 
-    </a-table>
-    <a-modal v-model:visible="state.ClusterConfigVisible" title="查看集群凭证" :footer="null" :keyboard="false" :maskClosable="false">
+    </el-table>
+    <el-modal v-model:visible="state.ClusterConfigVisible" title="查看集群凭证" :footer="null" :keyboard="false" :maskClosable="false">
 
-      <a-textarea v-model:value="state.ClusterConfig" placeholder="请粘贴KubeConfig内容" style="width: 100%; height: 600px"/>
-    </a-modal>
+      <el-textarea v-model:value="state.ClusterConfig" placeholder="请粘贴KubeConfig内容" style="width: 100%; height: 600px"/>
+    </el-modal>
 
 
-    <a-modal v-model:visible="createK8SClusterVisible" title="添加新集群" @ok="onSubmit" @cancel="resetForm" cancelText="取消"
+    <el-modal v-model:visible="createK8SClusterVisible" title="添加新集群" @ok="onSubmit" @cancel="resetForm" cancelText="取消"
              okText="确定" :keyboard="false" :maskClosable="false">
-      <a-form
+      <el-form
           ref="formRef"
           :model="formState"
           :rules="rules"
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
       >
-        <a-form-item ref="k8sClusterName" label="集群名称" name="k8sClusterName">
-          <a-input v-model:value="formState.k8sClusterName" placeholder="请输入集群名称"/>
-        </a-form-item>
+        <el-form-item ref="k8sClusterName" label="集群名称" name="k8sClusterName">
+          <el-input v-model:value="formState.k8sClusterName" placeholder="请输入集群名称"/>
+        </el-form-item>
 
-<!--        <a-form-item label="集群版本" name="k8sClusterVersion">-->
-<!--          <a-select v-model:value="formState.k8sClusterVersion" placeholder="请选择集群版本">-->
-<!--            <a-select-option value="shanghai">Zone one</a-select-option>-->
-<!--            <a-select-option value="beijing">Zone two</a-select-option>-->
-<!--          </a-select>-->
-<!--        </a-form-item>-->
+<!--        <el-form-item label="集群版本" name="k8sClusterVersion">-->
+<!--          <el-select v-model:value="formState.k8sClusterVersion" placeholder="请选择集群版本">-->
+<!--            <el-select-option value="shanghai">Zone one</el-select-option>-->
+<!--            <el-select-option value="beijing">Zone two</el-select-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
-        <a-form-item label="集群凭证" name="k8sClusterConfig">
-          <a-textarea v-model:value="formState.k8sClusterConfig" placeholder="请粘贴KubeConfig内容"
+        <el-form-item label="集群凭证" name="k8sClusterConfig">
+          <el-textarea v-model:value="formState.k8sClusterConfig" placeholder="请粘贴KubeConfig内容"
                       style="width: 100%; height: 300px"/>
-        </a-form-item>
+        </el-form-item>
 
-      </a-form>
-    </a-modal>
+      </el-form>
+    </el-modal>
 
     <div class="float-right" style="padding: 10px 0;">
 
-      <a-pagination size="md" :show-total="total => `共 ${state.total} 条数据`" :v-model="state.total"
+      <el-pagination size="md" :show-total="total => `共 ${state.total} 条数据`" :v-model="state.total"
                     :page-size-options="state.pageSizeOptions"
                     :total="state.total"
                     show-size-changer
@@ -91,7 +91,7 @@
           <span v-if="props.value !== '50'">{{ props.value }}条/页</span>
           <span v-if="props.value === '50'">全部</span>
         </template>
-      </a-pagination>
+      </el-pagination>
     </div>
 
 
