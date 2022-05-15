@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js" ></script>
+    <meta charset="UTF-8">
+    <title>告警确认</title>
+</head>
+<body>
+    <div>
+        <form action="">
+            <div>ID: <input type="text" name="id" disabled value="{{ .id }}" /> </div>
+            <div>延长时间: <input type="text" name="duration"  /></div>
+            <div>确认用户: <input type="text" name="user" /> </div>
+            <div><input type="submit" value="提交" /></div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        $("form").submit(function () {
+            var data = {
+                "ids": $('input[name="id"]').val(),
+                "duration": $('input[name="duration"]').val(),
+                "user": $('input[name="user"]').val(),
+            };
+            $.ajax({
+                type: "POST",
+                url: "/api/internel/confirmAlert",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Token", {{ .token }});
+                },
+                data: data,
+            }).then(res => {
+                alert(res);
+            });
+        });
+    </script>
+</body>
+</html>

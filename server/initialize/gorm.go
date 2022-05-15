@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"fmt"
 	"kubespace/server/model/kubernetes"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"kubespace/server/utils/monitoring/prometheus"
 )
 
 // Gorm 初始化数据库并产生数据库全局变量
@@ -22,6 +24,17 @@ func Gorm() *gorm.DB {
 	default:
 		return GormMysql()
 	}
+}
+
+//初始化prometheus链接
+func InitPrometheusClient() *prometheus.Prometheus {
+	cli, err := prometheus.NewPrometheus(
+		&prometheus.Options{Endpoint: fmt.Sprintf("http://%s:%s/", global.GVA_CONFIG.Monitor.Host, global.GVA_CONFIG.Monitor.Port)})
+	if err != nil {
+		fmt.Println("init monitor client error", err)
+		panic(err)
+	}
+	return cli
 }
 
 // RegisterTables 注册数据库表专用

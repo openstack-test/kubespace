@@ -53,3 +53,13 @@ func FailWithMessage(message string, c *gin.Context) {
 func FailWithDetailed(data interface{}, message string, c *gin.Context) {
 	Result(ERROR, data, message, c)
 }
+
+func MonitData(state bool, msg interface{}, data interface{}, total int, c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, gin.H{
+		"state":       state,
+		"message":     msg,
+		"items":       data,
+		"total_count": total,
+	})
+	return
+}

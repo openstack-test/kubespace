@@ -1,0 +1,11 @@
+<div>
+    <h4><span style="color: red">[告警触发] {{ .Title }}</span></h4>
+    <h5>环境: <span>{{ .PromName }}</span></h5>
+	<h5>当前值: <span>{{ .Value }}</span></h5>
+    <h5>规则ID: <span>{{ .RuleId }}</span></h5>
+    <h5>标签: {{ range $key, $value :=  .Labels }} <span>{{ $key }}:{{ $value }} |</span> {{ end }}</h5>
+    <h5>告警说明: {{ .Summary }} {{ .Description }} </h5>
+	<h5>持续时间: <span> {{ .Count }}分钟</span></h5>
+	<h5>触发时间: <span>{{ .FirstAt.Format "2006-01-02 15:04:05" }}</span></h5>
+    <h5>告警确认: <span>{{ .ConformUrl }}</span></h5>
+</div>

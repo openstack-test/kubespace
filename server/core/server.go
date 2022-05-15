@@ -1,6 +1,8 @@
 package core
 
 import (
+	"context"
+	"kubespace/server/service/alert"
 	"fmt"
 	"time"
 
@@ -42,5 +44,19 @@ func RunWindowsServer() {
 	默认前端运行地址: http://127.0.0.1:8080
     默认后端运行地址: http://127.0.0.1:8888
 `, address)
+	ctx, _ := context.WithCancel(context.Background())
+	go alert.Start(ctx)        //启动监控程序
 	global.GVA_LOG.Error(s.ListenAndServe().Error())
+	//ctx, cancel := context.WithCancel(context.Background())
+	//go cron.TaskStart(ctx)     //启动定时任务
+	//go utils.SyncLdapTask(ctx) //启动ldap同步任务
+	//go alert.Start(ctx)        //启动监控程序
+	//go cluster.NewClusterMgr() //启动contro-manager
+	//ch := make(chan os.Signal)
+	//signal.Notify(ch, os.Interrupt, os.Kill, syscall.SIGTERM, syscall.SIGHUP)
+
+/*	if err := s.ListenAndServe(); err != nil {
+		global.GVA_LOG.Error(err.Error())
+		cancel()
+	}*/
 }

@@ -25,6 +25,15 @@ type Server struct {
 	Excel Excel `mapstructure:"excel" json:"excel" yaml:"excel"`
 	Timer Timer `mapstructure:"timer" json:"timer" yaml:"timer"`
 
+	//prometheus
+	Monitor Monitor `mapstructure:"monitor" json:"monitor" yaml:"monitor"`
+	Report  Report  `mapstructure:"report" json:"report" yaml:"report"`
+	Domain  Domain  `mapstructure:"domain" json:"domain" yaml:"domain"`
+
 	// 跨域配置
 	Cors CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+}
+
+type Domain struct {
+	Host string `mapstructure:"host" json:"host" yaml:"host"`
 }
