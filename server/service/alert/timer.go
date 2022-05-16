@@ -103,7 +103,7 @@ func UpdateMaintainlist() {
 	for _, mid := range maintainIds {
 		hosts := ([]*host)(nil)
 		//err := global.GDB.Model("monitor_host").Where("mid = ?", mid.Id).Scan(&hosts)
-		err := global.GVA_DB.Model("monitor_host").Where("mid = ?", mid.Id).Scan(&hosts)
+		err := global.GVA_DB.Model("monitor_host").Where("mid = ?", mid.Id).Scan(&hosts).Error
 		if err != nil {
 			log.Println("get table host hostname list error", err)
 		}
@@ -126,13 +126,13 @@ func Filter(tx *gorm.DB, alerts map[int64][]Record, maxCount map[int64]int) map[
 		var userGroupList []utlAlert.UserGroup
 		planId := (*PlanId)(nil)
 		AlertsMap := make(map[int][]*utlAlert.SingleAlert)
-		err := tx.Model("monitor_rule").Where("id = ?", key).Scan(&planId)
+		err := tx.Model("monitor_rule").Where("id = ?", key).Scan(&planId).Error
 		if err != nil {
 			log.Println("get monitor_rule ids error", err)
 			return nil
 		}
 		if _, ok := Cache[planId.PlanId]; !ok {
-			err := tx.Model("monitor_plan_receiver").Where("plan_id = ?", planId.PlanId).Scan(&userGroupList)
+			err := tx.Model("monitor_plan_receiver").Where("plan_id = ?", planId.PlanId).Scan(&userGroupList).Error
 			if err != nil {
 				log.Fatalf("get monitor_plan_receiver plan_id list error:%v", err)
 				return nil
@@ -180,7 +180,10 @@ func Filter(tx *gorm.DB, alerts map[int64][]Record, maxCount map[int64]int) map[
 							if err != nil {
 								fmt.Println("update send_count error", err)
 							}*/
-							tx.Exec("UPDATE monitor_alert SET send_count=send_count+1 WHERE status = 2 and rule_id = ?", key)
+							err := tx.Exec("UPDATE monitor_alert SET send_count=send_count+1 WHERE status = 2 AND rule_id = ?", key).Error
+							if err != nil {
+								fmt.Println("update send_count error: ", err)
+							}
 							flag = true
 						}
 						if flag && element.ReversePolishNotation == "label=ALL" {
@@ -267,7 +270,10 @@ func Start(ctx context.Context) {
 	if err != nil {
 		log.Println("update alert to recover error", err)
 	}*/
-	global.GVA_DB.Exec("UPDATE monitor_alert SET status=3, send_count=0 WHERE status=2")
+	err := global.GVA_DB.Exec("UPDATE monitor_alert SET status=3, send_count=0 WHERE status=2").Error
+	if err != nil {
+		log.Println("update alert to recover error", err)
+	}
 	go func() {
 		ticker1 := time.NewTicker(30 * time.Second)
 		defer ticker1.Stop()
@@ -295,7 +301,9 @@ func Start(ctx context.Context) {
 						log.Fatalf("update alert status")
 					}*/
 
-					global.GVA_DB.Exec("UPDATE monitor_alert SET status=2 WHERE status=1 AND confirmed_before<?", now)
+					if err := global.GVA_DB.Exec("UPDATE monitor_alert SET status=2 WHERE status=1 AND confirmed_before<?", now).Error; err != nil {
+						log.Println("update alert status error: ", err)
+					}
 
 					/*if tx, err := global.GDB.Begin(); err == nil {
 						_, err := tx.Model("monitor_alert").Data(gdb.Map{
@@ -308,14 +316,19 @@ func Start(ctx context.Context) {
 							log.Printf("update alert status!=0 error:%v", err)
 						}*/
 
-					   global.GVA_DB.Exec("UPDATE monitor_alert SET count=count+1 WHERE status IN(1, 2)")
-
+					    tx := global.GVA_DB.Begin()
+						err := global.GVA_DB.Exec("UPDATE monitor_alert SET count=count+1 WHERE status IN(1, 2)").Error
+						if err != nil {
+							log.Printf("update alert status!=0 error:%v", err)
+						}
 						/*err = tx.Model("monitor_alert").Where("status = ?", 2).Scan(&info) //查询正在告警的记录
 						if err != nil {
 							log.Printf("select alert status=2 data error:%v", err)
 						}*/
 
-						global.GVA_DB.Raw("SELECT * FROM monitor_alert WHERE status = ?", 2).Scan(&info)
+						if err := global.GVA_DB.Raw("SELECT * FROM monitor_alert WHERE status = ?", 2).Scan(&info).Error; err != nil {
+							log.Printf("select alert status=2 data error:%v", err)
+						}
 
 						aggregation := make(map[int64][]Record)
 						maxCount := make(map[int64]int)
@@ -331,7 +344,6 @@ func Start(ctx context.Context) {
 							}
 						}
 						Rw.RLock()
-						tx := global.GVA_DB.Begin()
 						ready2send := Filter(tx, aggregation, maxCount)
 						Rw.RUnlock()
 						tx.Commit()
@@ -347,7 +359,6 @@ func Start(ctx context.Context) {
 						Lock.Unlock()
 						log.Println("Recoveries to send:", recover2send)
 						RecoverSender(recover2send, now)
-
 				}()
 			}
 		}
