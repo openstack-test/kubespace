@@ -95,7 +95,7 @@ func UpdateMaintainlist() {
 	now := datetime.Format("15:04")
 	maintainIds := ([]*mainIds)(nil)
 	//err := global.GDB.Model("monitor_maintain").Where("valid>=? AND day_start<=? AND day_end>=? AND (flag=true AND (time_start<=? OR time_end>=?) OR flag=false AND time_start<=? AND time_end>=?) AND month&"+strconv.Itoa(int(math.Pow(2, float64(time.Now().Month()))))+">0", datetime.Format("2006-01-02 15:04:05"), datetime.Day(), datetime.Day(), now, now, now, now).Scan(&maintainIds)
-	err := global.GVA_DB.Model("monitor_maintain").Where("valid>=? AND day_start<=? AND day_end>=? AND (flag=true AND (time_start<=? OR time_end>=?) OR flag=false AND time_start<=? AND time_end>=?) AND month&"+strconv.Itoa(int(math.Pow(2, float64(time.Now().Month()))))+">0", datetime.Format("2006-01-02 15:04:05"), datetime.Day(), datetime.Day(), now, now, now, now).Scan(&maintainIds).Error
+	err := global.GVA_DB.Raw("SELECT * FROM monitor_maintain WHERE valid>=? AND day_start<=? AND day_end>=? AND (flag=true AND (time_start<=? OR time_end>=?) OR flag=false AND time_start<=? AND time_end>=?) AND month&"+strconv.Itoa(int(math.Pow(2, float64(time.Now().Month()))))+">0", datetime.Format("2006-01-02 15:04:05"), datetime.Day(), datetime.Day(), now, now, now, now).Scan(&maintainIds).Error
 	if err != nil {
 		log.Println("get table maintains id list error", err)
 	}
