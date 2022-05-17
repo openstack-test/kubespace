@@ -70,7 +70,7 @@ func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, er
 		{MenuLevel: 0, Hidden: false, ParentId: "8", Path: "autoPkg", Name: "autoPkg", Component: "view/systemTools/autoPkg/autoPkg.vue", Sort: 0, Meta: Meta{Title: "自动化package", Icon: "folder"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "kubernetes", Name: "kubernetes", Component: "view/kubernetes/index.vue", Sort: 2, Meta: Meta{Title: "Kubernetes管理", Icon: "cloudy"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "17", Path: "k8sCluster", Name: "k8sCluster", Component: "view/kubernetes/cluster/K8SClusterManage.vue", Sort: 1, Meta: Meta{Title: "集群管理", Icon: "menu"}},
-		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "monitor", Name: "monitor", Component: "view/monitor", Sort: 8, Meta: Meta{Title: "监控中心", Icon: "menu"}},
+		{MenuLevel: 0, Hidden: false, ParentId: "0", Path: "monitor", Name: "monitor", Component: "view/monitor/index.vue", Sort: 8, Meta: Meta{Title: "监控中心", Icon: "menu"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "19", Path: "rule", Name: "rule", Component: "view/monitor/rule.vue", Sort: 1, Meta: Meta{Title: "监控规则", Icon: "menu"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "19", Path: "plan", Name: "plan", Component: "view/monitor/plan.vue", Sort: 2, Meta: Meta{Title: "告警计划", Icon: "menu"}},
 		{MenuLevel: 0, Hidden: false, ParentId: "19", Path: "alert_list", Name: "alert_list", Component: "view/monitor/alert_list.vue", Sort: 3, Meta: Meta{Title: "告警列表", Icon: "menu"}},
