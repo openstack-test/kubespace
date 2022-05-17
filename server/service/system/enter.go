@@ -10,10 +10,8 @@ type ServiceGroup struct {
 	AutoCodeService
 	BaseMenuService
 	AuthorityService
-	DictionaryService
 	SystemConfigService
 	AutoCodeHistoryService
 	OperationRecordService
-	DictionaryDetailService
 	AuthorityBtnService
 }

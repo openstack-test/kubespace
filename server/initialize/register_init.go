@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	_ "kubespace/server/source/example"
 	_ "kubespace/server/source/system"
 )
 

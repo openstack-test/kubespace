@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"kubespace/server/global"
-	"kubespace/server/model/example"
 	"kubespace/server/model/system"
 
 	"go.uber.org/zap"
@@ -46,20 +45,12 @@ func RegisterTables(db *gorm.DB) {
 		system.SysBaseMenu{},
 		system.JwtBlacklist{},
 		system.SysAuthority{},
-		system.SysDictionary{},
 		system.SysOperationRecord{},
 		system.SysAutoCodeHistory{},
-		system.SysDictionaryDetail{},
 		system.SysBaseMenuParameter{},
 		system.SysBaseMenuBtn{},
 		system.SysAuthorityBtn{},
 		system.SysAutoCode{},
-
-		// 示例模块表
-		example.ExaFile{},
-		example.ExaCustomer{},
-		example.ExaFileChunk{},
-		example.ExaFileUploadAndDownload{},
 
 		// Kubernetes模块表
         kubernetes.K8SCluster{},

@@ -4,7 +4,6 @@ import (
 	"context"
 	adapter "github.com/casbin/gorm-adapter/v3"
 	"gorm.io/gorm"
-	"kubespace/server/model/example"
 	"kubespace/server/model/kubernetes"
 	sysModel "kubespace/server/model/system"
 	"kubespace/server/service/system"
@@ -41,21 +40,14 @@ func (e *ensureTables) MigrateTable(ctx context.Context) (context.Context, error
 		sysModel.SysBaseMenu{},
 		sysModel.SysAuthority{},
 		sysModel.JwtBlacklist{},
-		sysModel.SysDictionary{},
 		sysModel.SysAutoCodeHistory{},
 		sysModel.SysOperationRecord{},
-		sysModel.SysDictionaryDetail{},
 		sysModel.SysBaseMenuParameter{},
 		sysModel.SysBaseMenuBtn{},
 		sysModel.SysAuthorityBtn{},
 		sysModel.SysAutoCode{},
 
 		adapter.CasbinRule{},
-
-		example.ExaFile{},
-		example.ExaCustomer{},
-		example.ExaFileChunk{},
-		example.ExaFileUploadAndDownload{},
 
 		kubernetes.K8SCluster{},
 	}
@@ -78,21 +70,14 @@ func (e *ensureTables) TableCreated(ctx context.Context) bool {
 		sysModel.SysBaseMenu{},
 		sysModel.SysAuthority{},
 		sysModel.JwtBlacklist{},
-		sysModel.SysDictionary{},
 		sysModel.SysAutoCodeHistory{},
 		sysModel.SysOperationRecord{},
-		sysModel.SysDictionaryDetail{},
 		sysModel.SysBaseMenuParameter{},
 		sysModel.SysBaseMenuBtn{},
 		sysModel.SysAuthorityBtn{},
 		sysModel.SysAutoCode{},
 
 		adapter.CasbinRule{},
-
-		example.ExaFile{},
-		example.ExaCustomer{},
-		example.ExaFileChunk{},
-		example.ExaFileUploadAndDownload{},
 
 		kubernetes.K8SCluster{},
 	}

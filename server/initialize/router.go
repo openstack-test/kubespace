@@ -17,7 +17,6 @@ import (
 func Routers() *gin.Engine {
 	Router := gin.Default()
 	systemRouter := router.RouterGroupApp.System
-	exampleRouter := router.RouterGroupApp.Example
 	kubernetesRouter := router.RouterGroupApp.Kubernetes
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
@@ -61,15 +60,8 @@ func Routers() *gin.Engine {
 		systemRouter.InitCasbinRouter(PrivateGroup)              // 权限相关路由
 		systemRouter.InitAutoCodeRouter(PrivateGroup)            // 创建自动化代码
 		systemRouter.InitAuthorityRouter(PrivateGroup)           // 注册角色路由
-		systemRouter.InitSysDictionaryRouter(PrivateGroup)       // 字典管理
 		systemRouter.InitAutoCodeHistoryRouter(PrivateGroup)     // 自动化代码历史
 		systemRouter.InitSysOperationRecordRouter(PrivateGroup)  // 操作记录
-		systemRouter.InitSysDictionaryDetailRouter(PrivateGroup) // 字典详情管理
-		systemRouter.InitAuthorityBtnRouterRouter(PrivateGroup)  // 字典详情管理
-
-		exampleRouter.InitExcelRouter(PrivateGroup)                 // 表格导入导出
-		exampleRouter.InitCustomerRouter(PrivateGroup)              // 客户路由
-		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
 
 		kubernetesRouter.InitClusterRouter(PrivateGroup)            // K8s集群路由
 

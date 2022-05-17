@@ -11,8 +11,6 @@ type RouterGroup struct {
 	CasbinRouter
 	AutoCodeRouter
 	AuthorityRouter
-	DictionaryRouter
 	OperationRecordRouter
-	DictionaryDetailRouter
 	AuthorityBtnRouter
 }

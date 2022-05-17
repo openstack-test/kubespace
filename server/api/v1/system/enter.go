@@ -11,11 +11,9 @@ type ApiGroup struct {
 	AutoCodeApi
 	SystemApiApi
 	AuthorityApi
-	DictionaryApi
 	AuthorityMenuApi
 	OperationRecordApi
 	AutoCodeHistoryApi
-	DictionaryDetailApi
 	AuthorityBtnApi
 }
 
@@ -29,10 +27,8 @@ var (
 	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
 	baseMenuService         = service.ServiceGroupApp.SystemServiceGroup.BaseMenuService
 	authorityService        = service.ServiceGroupApp.SystemServiceGroup.AuthorityService
-	dictionaryService       = service.ServiceGroupApp.SystemServiceGroup.DictionaryService
 	systemConfigService     = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
 	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
 	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistoryService
-	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
 	authorityBtnService     = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
 )
